@@ -29,6 +29,16 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
+    /* This site is dark-only — it never follows the OS light/dark setting.
+       Without telling the browser that, some mobile browsers (notably
+       Android Chrome/WebView with the "Dark theme: web contents"
+       accessibility setting on) assume the page is light-themed and
+       apply their own heuristic re-theming to native form controls —
+       text inputs, selects, date pickers — which can override our CSS
+       and render them with a white background, black text and the
+       system's default (serif) font, clashing badly with the rest of
+       the page. Declaring color-scheme up front opts out of that. */
+    color-scheme: dark;
     --bg: #121016;
     --bg-2: #17141c;
     --surface: #1e1a25;
@@ -895,6 +905,7 @@
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
   select,
   textarea{
+    color-scheme: dark;
     font-family: inherit;
     font-size: 13px;
     color: var(--text);
@@ -905,6 +916,15 @@
     outline: none;
     accent-color: var(--diamond);
     transition: border-color .15s ease;
+  }
+  /* Text-like inputs only (not select — its native dropdown arrow and
+     panel should stay; color-scheme above is enough to theme those dark).
+     appearance:none here strips native chrome (e.g. the date-picker
+     field's own background, number spinners) that can otherwise ignore
+     our background/color and render with the browser's light UA style. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]){
+    -webkit-appearance: none;
+    appearance: none;
   }
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
   select:focus,
@@ -1602,6 +1622,13 @@
     .skel-podium-card{ height: 110px !important; align-self: stretch !important; }
     .board-row{ grid-template-columns: 36px 1fr 70px; }
     .board-row .cell-region{ display:none; }
+    /* The admin sub-nav (Roster / Punishments / Activity Log / Settings)
+       is a plain unwrapped flex row, sized for four pills side by side.
+       On a narrow phone that no longer fits — the last pill (Settings)
+       got pushed off the right edge of the screen with no way to reach
+       it. Let the pills wrap into a 2x2 grid instead. */
+    .admin-subnav{ flex-wrap: wrap; }
+    .admin-subnav button{ flex: 1 1 calc(50% - 6px); }
     /* Row-based admin tables (roster, punishments, activity log, admin
        names, analytics) each carry their own multi-column grid template —
        some as a plain class, some as a two-class modifier (e.g. .roster-cols)
