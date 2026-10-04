@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://ollaloll.github.io/genghis-tiers/sitemap.xml
