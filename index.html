@@ -3774,7 +3774,7 @@ function renderAdmin(){
   }
 }
 
-let settingsOpenSections = new Set(['Site tagline', 'Maintenance mode']);
+let settingsOpenSections = new Set();
 function so(title){ return settingsOpenSections.has(title) ? 'open' : ''; }
 async function renderAdminSettings(){
   const content = document.getElementById('admin-content');
