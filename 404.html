@@ -2327,6 +2327,8 @@
     .shell{ padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
     #jump-to-top-btn{ bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
   }
+
+  #global-search-input:disabled{ opacity: .5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -2900,11 +2902,26 @@ function renderAnnouncementBanner(){
 }
 
 /* ---- Global player search ---- */
+/* The header search is switched off for visitors while maintenance mode (or a
+   scheduled maintenance window) is active — admins can still use it. */
+function syncSearchForMaintenance(){
+  const input = document.getElementById('global-search-input');
+  if(!input) return;
+  const off = shouldGateForMaintenance();
+  input.disabled = off;
+  input.placeholder = off ? 'Search unavailable' : 'Find a player...';
+  if(off){
+    input.value = '';
+    const list = document.getElementById('global-search-list');
+    if(list) list.innerHTML = '';
+  }
+}
 function wireGlobalSearch(){
   const input = document.getElementById('global-search-input');
   const list = document.getElementById('global-search-list');
   if(!input || !list) return;
   input.addEventListener('input', () => {
+    if(shouldGateForMaintenance()) return;
     const q = input.value.trim().toLowerCase();
     if(!q){ list.innerHTML = ''; return; }
     // Banned players never appear in the autocomplete suggestions — only an
@@ -2914,6 +2931,7 @@ function wireGlobalSearch(){
   });
   input.addEventListener('keydown', (e) => {
     if(e.key !== 'Enter') return;
+    if(shouldGateForMaintenance()) return;
     const name = input.value.trim();
     if(!name) return;
     const p = findPlayerByName(name);
@@ -5935,6 +5953,7 @@ function showView(name, opts){
     name = 'maintenance';
   }
   currentView = name;
+  syncSearchForMaintenance();
   const views = { board: 'view-board', admin: 'view-admin', info: 'view-info', recent: 'view-recent', stats: 'view-stats', notfound: 'view-404', maintenance: 'view-maintenance' };
   Object.entries(views).forEach(([key, id]) => {
     const el = document.getElementById(id);
