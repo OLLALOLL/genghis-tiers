@@ -1,0 +1,24 @@
+# Free Supabase projects get paused after ~7 days without activity, which makes
+# the site show "failed to fetch". This pings the database every other day so
+# it never counts as inactive. It only reads one row using the public anon key
+# that is already in the site's source.
+name: Keep Supabase awake
+
+on:
+  schedule:
+    - cron: "17 6 */2 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query the players table
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://gyoapcdpjruzirlkpmvq.supabase.co/rest/v1/players?select=id&limit=1" \
+            -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}")
+          echo "Supabase responded with HTTP $code"
+          [ "$code" = "200" ]
+        env:
+          KEY: sb_publishable_3AXdi2AtOv0f2OES60rakA_7yld_-Fw
