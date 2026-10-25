@@ -2238,6 +2238,95 @@
     #jump-to-top-btn{ bottom: calc(84px + env(safe-area-inset-bottom, 0px)); right: 14px; }
     #corner-admin-btn{ display: none; }
   }
+
+  /* ---- gamemode picker + tab icons: desktop keeps the old pills/text tabs ---- */
+  .gm-bar, .gm-sheet, .tab-ico, .lbl-short{ display: none; }
+
+  @media (max-width: 720px){
+    /* Gamemode: a compact "‹ Sword ▾ ›" bar that opens a grid sheet (swiping the board still works too) */
+    .gamemode-nav{ display: none; }
+    .gm-bar{
+      position: sticky;
+      top: var(--hdr-h);
+      z-index: 40;
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      margin: 0 calc(var(--pad) * -1) 14px;
+      padding: 8px var(--pad);
+      background: rgba(18,16,22,0.97);
+      border-bottom: 1px solid var(--border);
+    }
+    .gm-current{
+      flex: 1 1 auto; min-width: 0;
+      display: flex; align-items: center; gap: 10px;
+      font-family: inherit; font-size: 15px; font-weight: 700; color: var(--text);
+      background: linear-gradient(135deg, rgba(99,214,232,0.14), rgba(183,155,214,0.14));
+      border: 1px solid var(--diamond);
+      border-radius: 12px; padding: 0 14px; height: 44px; cursor: pointer;
+    }
+    .gm-cur-icon{ width: 22px; height: 22px; object-fit: contain; flex: none; }
+    .gm-ico-emoji{ font-size: 18px; line-height: 1; width: 22px; text-align: center; }
+    .gm-cur-label{ flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gm-cur-count{ font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); font-weight: 500; }
+    .gm-caret{ color: var(--diamond); font-size: 13px; }
+    .gm-step{
+      flex: none; width: 44px; height: 44px;
+      font-size: 24px; line-height: 1; color: var(--text);
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+    }
+    .gm-step:disabled{ opacity: .3; cursor: default; }
+    .gm-sheet{ position: fixed; inset: 0; z-index: 120; display: none; }
+    .gm-sheet.open{ display: block; }
+    .gm-sheet-backdrop{ position: absolute; inset: 0; background: rgba(10,8,14,0.7); animation: fadeIn .2s ease both; }
+    .gm-sheet-panel{
+      position: absolute; left: 0; right: 0; bottom: 0;
+      max-height: 85vh; overflow-y: auto;
+      background: var(--surface); border-top: 1px solid var(--border);
+      border-radius: 22px 22px 0 0;
+      padding: 20px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+      animation: sheetUp .26s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .gm-sheet-panel::before{ content:''; position:absolute; top:8px; left:50%; width:40px; height:4px; margin-left:-20px; border-radius:4px; background: var(--border); }
+    .gm-sheet-title{ font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--text-faint); text-transform: uppercase; text-align: center; margin: 4px 0 14px; }
+    .gm-grid{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .gm-tile{
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      min-height: 84px; padding: 10px 6px;
+      font-family: inherit; font-size: 12px; font-weight: 700; color: var(--text-dim);
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; cursor: pointer;
+    }
+    .gm-tile-icon{ width: 28px; height: 28px; object-fit: contain; }
+    .gm-tile.active{ color: var(--text); border-color: var(--diamond); background: linear-gradient(135deg, rgba(99,214,232,0.16), rgba(183,155,214,0.16)); }
+    .gm-tile:active{ transform: scale(.96); }
+
+    /* Bottom bar: floating rounded dock with icons; active tab gets a tinted pill */
+    nav.tabs{
+      left: 10px; right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      padding: 6px;
+      gap: 4px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(28,23,36,0.96);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    }
+    nav.tabs button{
+      flex: 1 1 0; min-width: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      padding: 8px 2px 7px;
+      font-size: 10.5px; font-weight: 600;
+      border: none; border-radius: 16px;
+      color: var(--text-faint);
+    }
+    nav.tabs button .tab-ico{ display: block; width: 22px; height: 22px; }
+    nav.tabs .lbl-full{ display: none; }
+    nav.tabs .lbl-short{ display: block; }
+    nav.tabs button span{ line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    nav.tabs button.active{ background: rgba(99,214,232,0.14); color: var(--diamond); border: none; }
+    .shell{ padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+    #jump-to-top-btn{ bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  }
 </style>
 </head>
 <body>
@@ -2265,11 +2354,11 @@
         <datalist id="global-search-list"></datalist>
       </div>
       <nav class="tabs">
-        <button id="tab-board" class="active">Leaderboard</button>
-        <button id="tab-recent">Recent</button>
-        <button id="tab-stats">Stats</button>
-        <button id="tab-info">Info</button>
-        <button id="tab-admin-visible" style="display:none;">Admin</button>
+        <button id="tab-board" class="active"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span class="lbl-full">Leaderboard</span><span class="lbl-short">Board</span></button>
+        <button id="tab-recent"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Recent</span></button>
+        <button id="tab-stats"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Stats</span></button>
+        <button id="tab-info"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Info</span></button>
+        <button id="tab-admin-visible" style="display:none;"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span>Admin</span></button>
       </nav>
     </div>
   </header>
@@ -3611,9 +3700,27 @@ function applyPathToState(){
 window.addEventListener('popstate', applyPathToState);
 
 function gamemodeNav(){
+  const modes = visibleGamemodes();
+  const cur = modes.find(g => g.id === currentGamemode) || modes[0];
+  const idx = modes.indexOf(cur);
+  const icon = (g, cls) => KIT_ICONS[g.id] ? `<img class="${cls}" src="${KIT_ICONS[g.id]}" alt="">` : (g.id === 'overall' ? '<span class="' + cls + ' gm-ico-emoji">🏆</span>' : '');
   return `
+    <div class="gm-bar">
+      <button class="gm-step" data-step="-1" aria-label="Previous gamemode" ${idx <= 0 ? 'disabled' : ''}>‹</button>
+      <button class="gm-current" id="gm-open" aria-haspopup="dialog">${icon(cur, 'gm-cur-icon')}<span class="gm-cur-label">${cur.label}</span><span class="gm-cur-count">${idx + 1}/${modes.length}</span><span class="gm-caret">▾</span></button>
+      <button class="gm-step" data-step="1" aria-label="Next gamemode" ${idx >= modes.length - 1 ? 'disabled' : ''}>›</button>
+    </div>
+    <div class="gm-sheet" id="gm-sheet">
+      <div class="gm-sheet-backdrop" data-close="1"></div>
+      <div class="gm-sheet-panel" role="dialog" aria-label="Choose a gamemode">
+        <div class="gm-sheet-title">Choose a gamemode</div>
+        <div class="gm-grid">
+          ${modes.map(g => `<button class="gm-tile ${g.id===currentGamemode?'active':''}" data-gm="${g.id}">${icon(g, 'gm-tile-icon')}<span>${g.label}</span></button>`).join('')}
+        </div>
+      </div>
+    </div>
     <div class="gamemode-nav">
-      ${visibleGamemodes().map(g => `<button class="gm-pill ${g.id===currentGamemode?'active':''}" data-gm="${g.id}">${KIT_ICONS[g.id] ? `<img class="gm-pill-icon" src="${KIT_ICONS[g.id]}" alt="">` : ''}${g.label}</button>`).join('')}
+      ${modes.map(g => `<button class="gm-pill ${g.id===currentGamemode?'active':''}" data-gm="${g.id}">${KIT_ICONS[g.id] ? `<img class="gm-pill-icon" src="${KIT_ICONS[g.id]}" alt="">` : ''}${g.label}</button>`).join('')}
     </div>
   `;
 }
@@ -3637,9 +3744,25 @@ function renderBoard(){
   }
 
   view.innerHTML = gamemodeNav() + `<div id="gm-content"></div>`;
-  view.querySelectorAll('.gm-pill').forEach(btn => {
-    btn.addEventListener('click', () => { currentGamemode = btn.getAttribute('data-gm'); updateUrlForState(); renderBoard(); });
+  view.querySelectorAll('.gm-pill, .gm-tile').forEach(btn => {
+    btn.addEventListener('click', () => { document.body.style.overflow = ''; currentGamemode = btn.getAttribute('data-gm'); updateUrlForState(); renderBoard(); window.scrollTo(0, 0); });
   });
+  view.querySelectorAll('.gm-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modes = visibleGamemodes();
+      const i = modes.findIndex(g => g.id === currentGamemode) + Number(btn.getAttribute('data-step'));
+      if(i < 0 || i >= modes.length) return;
+      currentGamemode = modes[i].id; updateUrlForState(); renderBoard();
+    });
+  });
+  // The picker sheet lives on <body>, not inside the board view: the view
+  // animates (transform), which would trap the sheet underneath the header
+  // and the bottom dock instead of letting it cover them.
+  document.querySelectorAll('body > .gm-sheet').forEach(el => el.remove());
+  const gmSheet = document.getElementById('gm-sheet');
+  document.body.appendChild(gmSheet);
+  document.getElementById('gm-open').addEventListener('click', () => { gmSheet.classList.add('open'); document.body.style.overflow = 'hidden'; });
+  gmSheet.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => { gmSheet.classList.remove('open'); document.body.style.overflow = ''; }));
 
   const content = document.getElementById('gm-content');
   if(currentGamemode === 'overall'){
