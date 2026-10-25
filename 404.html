@@ -62,6 +62,8 @@
 
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
+  /* No blue/grey flash box when tapping things on mobile. */
+  html{ -webkit-tap-highlight-color: transparent; }
   body{
     background:
       radial-gradient(ellipse 900px 500px at 15% -10%, #241d33 0%, transparent 60%),
