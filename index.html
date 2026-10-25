@@ -2909,7 +2909,7 @@ function syncSearchForMaintenance(){
   if(!input) return;
   const off = shouldGateForMaintenance();
   input.disabled = off;
-  input.placeholder = off ? 'Search unavailable' : 'Find a player...';
+  input.placeholder = off ? 'Search is off' : 'Find a player...';
   if(off){
     input.value = '';
     const list = document.getElementById('global-search-list');
