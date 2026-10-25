@@ -1,4 +1,4 @@
-const CACHE_NAME = 'genghis-tiers-v1';
+const CACHE_NAME = 'genghis-tiers-v2';
 const SHELL_URLS = [
   '/genghis-tiers/',
   '/genghis-tiers/index.html',
@@ -33,7 +33,10 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    fetch(req)
+    // 'no-cache' = always revalidate with the server instead of trusting the
+    // browser's HTTP cache (GitHub Pages sends max-age=600), so a fresh deploy
+    // shows up on the next load rather than up to ten minutes later.
+    fetch(req, { cache: 'no-cache' })
       .then((res) => {
         const copy = res.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {});
