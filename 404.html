@@ -2406,7 +2406,7 @@ const BASE_PATH = '/genghis-tiers';
 // this site. Any other host (old test deploys) shows a notice and stops
 // before touching the database.
 (function(){
-  const OFFICIAL = 'https://ollaloll.github.io/genghis-tiers/';
+  const OFFICIAL = 'https://ollaloll.com/genghistiers';
   const okHosts = ['ollaloll.github.io', 'localhost', '127.0.0.1', '[::1]'];
   const h = location.hostname;
   if(location.protocol === 'file:' || okHosts.indexOf(h) !== -1 || h.endsWith('.localhost')) return;
@@ -2415,7 +2415,7 @@ const BASE_PATH = '/genghis-tiers';
     '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#121016;color:#eee;font-family:system-ui,sans-serif;text-align:center">' +
     '<div style="max-width:420px"><div style="font-size:44px;margin-bottom:8px">&#9888;&#65039;</div>' +
     '<h1 style="margin:0 0 10px;font-size:24px">Outdated version</h1>' +
-    '<p style="margin:0 0 22px;color:#b8b2c4;line-height:1.5">This is an old copy of Genghis Tiers and is no longer updated. Please use the official site.</p>' +
+    '<p style="margin:0 0 22px;color:#b8b2c4;line-height:1.5">This is an old copy of Genghis Tiers and is no longer updated. Please go to OLLALOLL.com/genghistiers.</p>' +
     '<a href="' + OFFICIAL + '" style="display:inline-block;padding:12px 22px;border-radius:12px;background:#8b5cf6;color:#fff;text-decoration:none;font-weight:600">Go to the official site</a></div></div>';
   throw new Error('Outdated copy: halted');
 })();
